@@ -1,0 +1,67 @@
+{
+  "name": "komapi-passport",
+  "version": "0.0.1",
+  "description": "Komapi-passport is the recommended authentication module for Komapi.js. It is built on top of Passport.js and heavily inspired by koa-passport. It is fully compatible with passport.",
+  "author": "ersims",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/komapijs/komapi-passport.git"
+  },
+  "keywords": [
+    "komapi",
+    "koa",
+    "passport"
+  ],
+  "license": "MIT",
+  "readmeFilename": "README.md",
+  "bugs": {
+    "url": "https://github.com/komapijs/komapi-passport/issues"
+  },
+  "homepage": "https://github.com/komapijs/komapi-passport#README.md",
+  "engines": {
+    "node": ">= 4.4.5",
+    "npm": ">= 2.15.5"
+  },
+  "main": "index.js",
+  "scripts": {
+    "prebuild": "npm run clean --silent",
+    "build": "babel -q -D -s true ./src/ --out-dir ./dist/",
+    "clean": "del-cli ./dist ./coverage ./.nyc_output",
+    "coverage": "nyc report --reporter=text --reporter=text-summary --reporter=html && nyc check-coverage --lines=100 --functions=100 --branches=100 --statements=100",
+    "lint": "eslint index.js src/",
+    "pretest": "npm run clean --silent && npm run lint --silent",
+    "test": "nyc --reporter=lcov ava --require babel-core/register --timeout 180s --concurrency=25",
+    "posttest": "npm run coverage --silent",
+    "prepublish": "npm run build",
+    "watch": "ava --require babel-core/register --watch --serial --verbose"
+  },
+  "dependencies": {
+    "delegates": "^1.0.0",
+    "passport": "^0.3.2"
+  },
+  "devDependencies": {
+    "ava": "^0.16.0",
+    "babel-cli": "^6.11.4",
+    "babel-core": "^6.13.2",
+    "babel-eslint": "^6.1.2",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.11.5",
+    "del-cli": "^0.2.0",
+    "eslint": "^3.3.0",
+    "eslint-plugin-import": "^1.13.0",
+    "eslint-plugin-security": "^1.2.0",
+    "koa": "^2.0.0",
+    "koa-bodyparser": "^3.1.0",
+    "koa-router": "^7.0.1",
+    "nyc": "^8.3.0",
+    "passport-anonymous": "^1.0.1",
+    "passport-http": "^0.3.0",
+    "passport-local": "^1.0.0",
+    "passport-oauth2": "^1.3.0",
+    "supertest": "^2.0.0",
+    "supertest-as-promised": "^4.0.0"
+  },
+  "files": [
+    "dist",
+    "src"
+  ]
+}
