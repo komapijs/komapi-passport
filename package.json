@@ -1,7 +1,7 @@
 {
   "name": "komapi-passport",
   "version": "0.0.1",
-  "description": "Komapi-passport is the recommended authentication module for Komapi.js. It is built on top of Passport.js and heavily inspired by koa-passport. It is fully compatible with passport.",
+  "description": "Komapi-passport is the recommended authentication module for Komapi",
   "author": "ersims",
   "repository": {
     "type": "git",
