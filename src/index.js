@@ -6,6 +6,7 @@ import passport from 'passport';
 import passportRequest from 'passport/lib/http/request';
 import passportInitialize from 'passport/lib/middleware/initialize';
 import passportAuthenticate from 'passport/lib/middleware/authenticate';
+import ensureAuthenticated from './ensureAuthenticated';
 
 // Init
 const defaultOpts = {
@@ -122,6 +123,7 @@ export default class KomapiPassport extends passport.Passport {
     }
 }
 
-// Definitions
+// Definitions;
+KomapiPassport.ensureAuthenticated = ensureAuthenticated;
 KomapiPassport._initialize = passport.initialize;
 KomapiPassport._authenticate = passport.authenticate;

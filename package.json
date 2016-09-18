@@ -36,6 +36,7 @@
     "watch": "ava --require babel-core/register --watch --serial --verbose"
   },
   "dependencies": {
+    "boom": "^4.0.0",
     "delegates": "^1.0.0",
     "passport": "^0.3.2"
   },

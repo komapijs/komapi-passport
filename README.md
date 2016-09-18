@@ -25,6 +25,8 @@ $ npm install --save komapi-passport
 ```
 
 ### Hello World
+Try `POST /unprotected` and `POST /protected` using the simple example application below.
+
 ```js
 'use strict';
 
@@ -32,6 +34,7 @@ $ npm install --save komapi-passport
 const Komapi = require('komapi');
 const Passport = require('komapi-passport');
 const LocalStrategy = require('passport-local');
+const AnonymousStrategy = require('passport-anonymous');
 const bcrypt = require('bcrypt');
 
 // Init
@@ -54,12 +57,20 @@ passport.use(new LocalStrategy((username, password, done) => {
         return done(null, user);
     });
 }));
+passport.use(new AnonymousStrategy());
 
 // Middlewares
 app.use(app.mw.bodyParser());
 app.use(passport.initialize());
-app.use(passport.authenticate('local'));
-app.use((ctx) => ctx.send(ctx.request.auth));
+app.use(passport.authenticate(['local', 'anonymous']));
+app.use('/unprotected', (ctx) => ctx.send({
+    isAuthenticated: ctx.isAuthenticated(),
+    user: ctx.request.auth
+}));
+app.use('/protected', Passport.ensureAuthenticated(), (ctx) => ctx.send({
+    isAuthenticated: ctx.isAuthenticated(),
+    user: ctx.request.auth
+}));
 
 // Listen
 app.listen(process.env.PORT || 3000);
@@ -67,6 +78,7 @@ app.listen(process.env.PORT || 3000);
 
 ### Tips
 1. For better performance, use `Passport.mutateApp(app);` in your application bootstrap. This adds an application wide compatibility layer between [Passport](https://github.com/jaredhanson/passport) and [Koa](https://github.com/koajs/koa). If you do not use this, the compatibility layer will be added on a per-request basis - thus reducing performance slightly.
+2. If you allow unauthenticated requests (e.g. using `passport-anonymous` strategy) you can enforce authentication on some of your routes with the included `Passport.ensureAuthenticated()` middleware. 
 
 ### License
 
