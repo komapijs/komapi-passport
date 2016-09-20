@@ -6,7 +6,7 @@ import {agent as request} from 'supertest-as-promised';
 import Koa from 'koa';
 import bodyParser from 'koa-bodyparser';
 import Router from 'koa-router';
-import Passport from '../src/index';
+import passport, {KomapiPassport, mutateApp} from '../src/index';
 import {Strategy as LocalStrategy} from 'passport-local';
 import {Strategy as AnonymousStrategy} from 'passport-anonymous';
 import {BasicStrategy} from 'passport-http';
@@ -19,27 +19,27 @@ const passportUser = {
 };
 function appFactory() {
     const app = new Koa();
-    const passport = new Passport();
-    passport.serializeUser(function (user, done) {
+    const komapiPassport = new KomapiPassport();
+    komapiPassport.serializeUser(function (user, done) {
         done(null, user.id);
     });
-    passport.deserializeUser(function (id, done) {
+    komapiPassport.deserializeUser(function (id, done) {
         done(null, passportUser);
     });
-    passport.use(new LocalStrategy(function (username, password, done) {
+    komapiPassport.use(new LocalStrategy(function (username, password, done) {
         if (username === 'test' && password === 'testpw') return done(null, passportUser);
         else if (username === 'throw') return done(new Error('Authentication Error'));
         done(null, false);
     }));
-    passport.use(new BasicStrategy(function (username, password, done) {
+    komapiPassport.use(new BasicStrategy(function (username, password, done) {
         if (username === 'test' && password === 'testpw') return done(null, passportUser);
         else if (username === 'throw') return done(new Error('Authentication Error'));
         done(null, false);
     }));
     app.use(bodyParser());
-    app.use(passport.initialize());
-    app.use(passport.session());
-    app.passport = passport;
+    app.use(komapiPassport.initialize());
+    app.use(komapiPassport.session());
+    app.passport = komapiPassport;
     return app;
 }
 
@@ -49,9 +49,9 @@ test.serial('can mutate Koa objects to improve performance', async t => {
     const app = appFactory();
     const orgMutator = app.passport.constructor.mutate;
     t.is(typeof app.context.login, 'undefined');
-    Passport.mutateApp(app);
+    mutateApp(app);
     t.is(typeof app.context.login, 'function');
-    Passport.mutate = function fakeMutator() {
+    KomapiPassport.mutate = function fakeMutator() {
         t.fail();
     };
     app.passport.use(new AnonymousStrategy());
@@ -66,7 +66,7 @@ test.serial('can mutate Koa objects to improve performance', async t => {
     const res = await request(app.listen())
         .get('/');
     t.is(res.status, 204);
-    Passport.mutate = orgMutator;
+    KomapiPassport.mutate = orgMutator;
 });
 test('adds www-authenticate header', async t => {
     const app = appFactory();
@@ -81,6 +81,29 @@ test('adds www-authenticate header', async t => {
         .get('/');
     t.is(res.status, 401);
     t.is(res.headers['www-authenticate'], 'Basic realm="Users"');
+});
+test('provides a passport singleton by default', async t => {
+    const app = new Koa();
+    t.is(app.context.isAuthenticated, undefined);
+    mutateApp(app);
+    t.is(typeof app.context.isAuthenticated, 'function');
+    passport.use(new LocalStrategy(function (username, password, done) {
+        if (username === 'test' && password === 'testpw') return done(null, passportUser);
+        else if (username === 'throw') return done(new Error('Authentication Error'));
+        done(null, false);
+    }));
+    app.use(bodyParser());
+    app.use(passport.initialize());
+    app.use(passport.authenticate('local', {
+        successRedirect: '/secured',
+        failureRedirect: '/failed',
+        session: false
+    }));
+    const res = await request(app.listen())
+        .post('/login')
+        .send({ username: 'test', password: 'testpw' });
+    t.is(res.status, 302);
+    t.is(res.headers['location'], '/secured');
 });
 test('refuses invalid credentials', async t => {
     t.plan(5);
@@ -281,7 +304,7 @@ test('logout works', async t => {
 test('errors in the login handler are correctly propagated', async t => {
     t.plan(3);
     const app = new Koa();
-    const passport = new Passport();
+    const passport = new KomapiPassport();
     const router = new Router();
     passport.use(new LocalStrategy(function (username, password, done) {
         if (username === 'test' && password === 'testpw') return done(null, passportUser);
@@ -415,19 +438,19 @@ test('can authorize using the account property', async t => {
 test('supports custom user properties', async t => {
     t.plan(3);
     const app = new Koa();
-    const passport = new Passport();
+    const komapiPassport = new KomapiPassport();
     const router = new Router();
-    passport.use(new LocalStrategy(function (username, password, done) {
+    komapiPassport.use(new LocalStrategy(function (username, password, done) {
         if (username === 'test' && password === 'testpw') return done(null, passportUser);
         done(null, false);
     }));
     app.use(bodyParser());
-    app.use(passport.initialize({
+    app.use(komapiPassport.initialize({
         userProperty: 'customProperty'
     }));
-    app.use(passport.session());
+    app.use(komapiPassport.session());
     app.use(router.routes());
-    app.use(passport.authenticate('local'));
+    app.use(komapiPassport.authenticate('local'));
     app.use((ctx, next) => {
         t.deepEqual(ctx.request.customProperty, passportUser);
         t.deepEqual(ctx.customProperty, passportUser);
@@ -440,16 +463,16 @@ test('supports custom user properties', async t => {
 });
 test('does not set body unless explicitly told to', async t => {
     const app = new Koa();
-    const passport = new Passport();
-    passport.use(new OAuth2Strategy({
+    const komapiPassport = new KomapiPassport();
+    komapiPassport.use(new OAuth2Strategy({
         authorizationURL: 'https://www.example.com/oauth2/authorize',
         tokenURL: 'https://www.example.com/oauth2/token',
         clientID: 'ABC123',
         clientSecret: 'secret'
     }, (accessToken, refreshToken, profile, done) => {}));
     app.use(bodyParser());
-    app.use(passport.initialize());
-    app.use(passport.authenticate('oauth2'));
+    app.use(komapiPassport.initialize());
+    app.use(komapiPassport.authenticate('oauth2'));
     const res = await request(app.listen())
         .get('/login')
         .send({ username: 'test', password: 'testpw' });

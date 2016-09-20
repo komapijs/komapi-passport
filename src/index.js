@@ -13,8 +13,11 @@ const defaultOpts = {
     session: false
 };
 
-// Exports
-export default class KomapiPassport extends passport.Passport {
+// Definitions
+function mutateApp(app) {
+    return KomapiPassport.mutate(app.context, app.request, app.response);
+}
+class KomapiPassport extends passport.Passport {
     constructor() {
         super();
         const self = this;
@@ -89,9 +92,6 @@ export default class KomapiPassport extends passport.Passport {
             }
         });
     }
-    static mutateApp(app) {
-        return this.mutate(app.context, app.request, app.response);
-    }
     static mutate(context, request, response) {
 
         // Add passport to request
@@ -122,8 +122,10 @@ export default class KomapiPassport extends passport.Passport {
             .access('session');
     }
 }
-
-// Definitions;
-KomapiPassport.ensureAuthenticated = ensureAuthenticated;
 KomapiPassport._initialize = passport.initialize;
 KomapiPassport._authenticate = passport.authenticate;
+
+// Exports
+const komapiPassport = new KomapiPassport();
+export default komapiPassport;
+export {KomapiPassport, ensureAuthenticated, mutateApp};

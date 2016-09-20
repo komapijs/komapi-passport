@@ -4,7 +4,7 @@
 import test from 'ava';
 import {agent as request} from 'supertest-as-promised';
 import Koa from 'koa';
-import Passport from '../src/index';
+import {KomapiPassport, ensureAuthenticated} from '../src/index';
 import bodyParser from 'koa-bodyparser';
 import {Strategy as LocalStrategy} from 'passport-local';
 import {Strategy as AnonymousStrategy} from 'passport-anonymous';
@@ -13,15 +13,15 @@ import {Strategy as AnonymousStrategy} from 'passport-anonymous';
 test('allows authenticated requests', async t => {
     t.plan(3);
     const app = new Koa();
-    const passport = new Passport();
-    passport.use(new LocalStrategy(function (username, password, done) {
+    const komapiPassport = new KomapiPassport();
+    komapiPassport.use(new LocalStrategy(function (username, password, done) {
         if (username === 'test' && password === 'testpw') return done(null, {id:1});
         done(null, false);
     }));
     app.use(bodyParser());
-    app.use(passport.initialize());
-    app.use(passport.authenticate('local'));
-    app.use(Passport.ensureAuthenticated());
+    app.use(komapiPassport.initialize());
+    app.use(komapiPassport.authenticate('local'));
+    app.use(ensureAuthenticated());
     app.use((ctx, next) => {
         t.pass();
         ctx.body = 'ok';
@@ -34,16 +34,16 @@ test('allows authenticated requests', async t => {
 });
 test('rejects unauthenticated requests', async t => {
     const app = new Koa();
-    const passport = new Passport();
-    passport.use(new LocalStrategy(function (username, password, done) {
+    const komapiPassport = new KomapiPassport();
+    komapiPassport.use(new LocalStrategy(function (username, password, done) {
         if (username === 'test' && password === 'testpw') return done(null, {id:1});
         done(null, false);
     }));
-    passport.use(new AnonymousStrategy());
+    komapiPassport.use(new AnonymousStrategy());
     app.use(bodyParser());
-    app.use(passport.initialize());
-    app.use(passport.authenticate(['local', 'anonymous']));
-    app.use(Passport.ensureAuthenticated());
+    app.use(komapiPassport.initialize());
+    app.use(komapiPassport.authenticate(['local', 'anonymous']));
+    app.use(ensureAuthenticated());
     app.use((ctx, next) => {
         t.throws(next, 'Access to this resource requires authentication');
     });
@@ -55,17 +55,17 @@ test('rejects unauthenticated requests', async t => {
 });
 test('rejects unauthenticated requests with custom error message', async t => {
     const app = new Koa();
-    const passport = new Passport();
+    const komapiPassport = new KomapiPassport();
     const msg = 'Custom Error Message';
-    passport.use(new LocalStrategy(function (username, password, done) {
+    komapiPassport.use(new LocalStrategy(function (username, password, done) {
         if (username === 'test' && password === 'testpw') return done(null, {id:1});
         done(null, false);
     }));
-    passport.use(new AnonymousStrategy());
+    komapiPassport.use(new AnonymousStrategy());
     app.use(bodyParser());
-    app.use(passport.initialize());
-    app.use(passport.authenticate(['local', 'anonymous']));
-    app.use(Passport.ensureAuthenticated(msg));
+    app.use(komapiPassport.initialize());
+    app.use(komapiPassport.authenticate(['local', 'anonymous']));
+    app.use(ensureAuthenticated(msg));
     app.use((ctx, next) => {
         t.throws(next, msg);
     });

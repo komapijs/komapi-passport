@@ -32,15 +32,14 @@ Try `POST /unprotected` and `POST /protected` using the simple example applicati
 
 // Dependencies
 const Komapi = require('komapi');
-const Passport = require('komapi-passport');
+const passport = require('komapi-passport');
 const LocalStrategy = require('passport-local');
 const AnonymousStrategy = require('passport-anonymous');
 const bcrypt = require('bcrypt');
 
 // Init
 const app = new Komapi();
-Passport.mutateApp(app); // This is optional. See the tips (1) for description
-const passport = new Passport();
+passport.mutateApp(app); // This is optional. See the tips (1) for description
 const user = {
     id: 1,
     username: 'jeffj',
@@ -67,7 +66,7 @@ app.use('/unprotected', (ctx) => ctx.send({
     isAuthenticated: ctx.isAuthenticated(),
     user: ctx.request.auth
 }));
-app.use('/protected', Passport.ensureAuthenticated(), (ctx) => ctx.send({
+app.use('/protected', passport.ensureAuthenticated(), (ctx) => ctx.send({
     isAuthenticated: ctx.isAuthenticated(),
     user: ctx.request.auth
 }));
