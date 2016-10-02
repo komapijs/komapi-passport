@@ -1,5 +1,3 @@
-'use strict';
-
 // Dependencies
 const passport = require('./dist/index'); // eslint-disable-line import/no-unresolved
 
