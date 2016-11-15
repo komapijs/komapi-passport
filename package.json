@@ -54,7 +54,7 @@
     "koa": "^2.0.0",
     "koa-bodyparser": "^3.1.0",
     "koa-router": "^7.0.1",
-    "nyc": "^8.3.0",
+    "nyc": "^9.0.1",
     "passport-anonymous": "^1.0.1",
     "passport-http": "^0.3.0",
     "passport-local": "^1.0.0",
