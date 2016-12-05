@@ -30,10 +30,10 @@
     "coverage": "nyc report --reporter=text --reporter=text-summary --reporter=html && nyc check-coverage --lines=100 --functions=100 --branches=100 --statements=100",
     "lint": "eslint index.js src/ test/",
     "pretest": "npm run clean --silent && npm run lint --silent",
-    "test": "nyc --reporter=lcov ava --require babel-core/register --timeout 180s --concurrency=25",
+    "test": "nyc --reporter=lcov ava --timeout 180s --concurrency=25",
     "posttest": "npm run coverage --silent",
     "prepublish": "npm run build",
-    "watch": "ava --require babel-core/register --watch --serial --verbose"
+    "watch": "ava --watch --serial --verbose"
   },
   "dependencies": {
     "boom": "^4.0.0",
@@ -41,11 +41,12 @@
     "passport": "^0.3.2"
   },
   "devDependencies": {
-    "ava": "^0.16.0",
+    "ava": "^0.17.0",
     "babel-cli": "^6.11.4",
     "babel-core": "^6.13.2",
     "babel-eslint": "^7.1.0",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.11.5",
+    "babel-register": "^6.18.0",
     "del-cli": "^0.2.0",
     "eslint": "^3.3.0",
     "eslint-config-airbnb-base": "^10.0.1",
@@ -65,5 +66,10 @@
   "files": [
     "dist",
     "src"
-  ]
+  ],
+  "ava": {
+    "require": [
+      "babel-register"
+    ]
+  }
 }
