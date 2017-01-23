@@ -21,7 +21,7 @@ Please refer to [Passport](https://github.com/jaredhanson/passport) for more inf
 ### Installation
 Install through npm and require it in your `index.js` file.
 ```bash
-$ npm install --save komapi-passport
+$ npm install --save komapi-passport passport-local passport-anonymous
 ```
 
 ### Hello World
