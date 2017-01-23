@@ -19,10 +19,12 @@
   },
   "homepage": "https://github.com/komapijs/komapi-passport#README.md",
   "engines": {
-    "node": ">= 4.4.5",
-    "npm": ">= 2.15.5"
+    "node": ">= 6.9.4",
+    "npm": ">= 3.10.10"
   },
   "main": "index.js",
+  "module": "src/index.js",
+  "jsnext:main": "src/index.js",
   "scripts": {
     "prebuild": "npm run clean --silent",
     "build": "babel -q -D -s true ./src/ --out-dir ./dist/",
