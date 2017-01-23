@@ -28,8 +28,6 @@ $ npm install --save komapi-passport
 Try `POST /unprotected` and `POST /protected` using the simple example application below.
 
 ```js
-'use strict';
-
 // Dependencies
 const Komapi = require('komapi');
 const passport = require('komapi-passport');
