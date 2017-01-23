@@ -21,20 +21,18 @@ Please refer to [Passport](https://github.com/jaredhanson/passport) for more inf
 ### Installation
 Install through npm and require it in your `index.js` file.
 ```bash
-$ npm install --save komapi-passport
+$ npm install --save komapi-passport passport-http bcrypt
 ```
 
 ### Hello World
-Try `POST /unprotected` and `POST /protected` using the simple example application below.
+Try `GET /` using the simple example application below. This example uses http basic authentication, but all passport strategies are supported.
+Username is "jeffj" and password is "mylittlesecret".
 
 ```js
-'use strict';
-
 // Dependencies
 const Komapi = require('komapi');
 const passport = require('komapi-passport');
-const LocalStrategy = require('passport-local');
-const AnonymousStrategy = require('passport-anonymous');
+const BasicStrategy = require('passport-http').BasicStrategy;
 const bcrypt = require('bcrypt');
 
 // Init
@@ -48,7 +46,8 @@ const user = {
 };
 
 // Setup
-passport.use(new LocalStrategy((username, password, done) => {
+passport.use(new BasicStrategy((username, password, done) => {
+    console.log(username, password)
     if (username !== user.username) return done(null, false);
     bcrypt.compare(password, user.passwordHash, (err, res) => {
         if (err) return done(err);
@@ -56,17 +55,11 @@ passport.use(new LocalStrategy((username, password, done) => {
         return done(null, user);
     });
 }));
-passport.use(new AnonymousStrategy());
 
 // Middlewares
-app.use(app.mw.bodyParser());
 app.use(passport.initialize());
-app.use(passport.authenticate(['local', 'anonymous']));
-app.use('/unprotected', (ctx) => ctx.send({
-    isAuthenticated: ctx.isAuthenticated(),
-    user: ctx.request.auth
-}));
-app.use('/protected', passport.ensureAuthenticated(), (ctx) => ctx.send({
+app.use(passport.authenticate(['basic']));
+app.use('/', passport.ensureAuthenticated(), (ctx) => ctx.send({
     isAuthenticated: ctx.isAuthenticated(),
     user: ctx.request.auth
 }));

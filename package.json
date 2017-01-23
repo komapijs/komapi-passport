@@ -19,10 +19,12 @@
   },
   "homepage": "https://github.com/komapijs/komapi-passport#README.md",
   "engines": {
-    "node": ">= 4.4.5",
-    "npm": ">= 2.15.5"
+    "node": ">= 6.9.4",
+    "npm": ">= 3.10.10"
   },
   "main": "index.js",
+  "module": "src/index.js",
+  "jsnext:main": "src/index.js",
   "scripts": {
     "prebuild": "npm run clean --silent",
     "build": "babel -q -D -s true ./src/ --out-dir ./dist/",
@@ -30,10 +32,10 @@
     "coverage": "nyc report --reporter=text --reporter=text-summary --reporter=html && nyc check-coverage --lines=100 --functions=100 --branches=100 --statements=100",
     "lint": "eslint index.js src/ test/",
     "pretest": "npm run clean --silent && npm run lint --silent",
-    "test": "nyc --reporter=lcov ava --timeout 180s --concurrency=25",
+    "test": "nyc --reporter=lcov ava",
     "posttest": "npm run coverage --silent",
     "prepublish": "npm run build",
-    "watch": "ava --watch --serial --verbose"
+    "watch": "ava --watch --serial"
   },
   "dependencies": {
     "boom": "^4.0.0",
@@ -68,8 +70,12 @@
     "src"
   ],
   "ava": {
+    "timeout": "180s",
+    "verbose": true,
+    "failFast": true,
+    "concurrency": 2,
     "require": [
-      "babel-register"
+        "babel-register"
     ]
   }
 }
