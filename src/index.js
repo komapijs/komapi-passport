@@ -24,7 +24,7 @@ class KomapiPassport extends passport.Passport {
               Object.defineProperty(ctx, ctx.request._passport.instance._userProperty, {
                 get: () => ctx.request[ctx.request._passport.instance._userProperty],
               });
-              ctx.request.login = ctx.request.logIn = (user, opts, callback) => { // eslint-disable-line no-param-reassign
+              ctx.request.login = (user, opts, callback) => { // eslint-disable-line no-param-reassign
                 if (callback) return login.call(ctx.request, user, opts, callback);
                 return new Promise((loginResolve, loginReject) => {
                   login.call(ctx.request, user, opts, (loginErr) => {
@@ -33,6 +33,7 @@ class KomapiPassport extends passport.Passport {
                   });
                 });
               };
+              ctx.request.logIn = ctx.request.login; // eslint-disable-line no-param-reassign
               /* istanbul ignore if | Ignored, as this is difficult to test */
               if (err) return reject(err);
               return resolve();
