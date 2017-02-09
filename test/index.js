@@ -1,6 +1,6 @@
 // Dependencies
 import test from 'ava';
-import { agent as request } from 'supertest-as-promised';
+import { agent as request } from 'supertest';
 import Koa from 'koa';
 import bodyParser from 'koa-bodyparser';
 import Router from 'koa-router';
