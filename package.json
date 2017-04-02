@@ -19,8 +19,8 @@
   },
   "homepage": "https://github.com/komapijs/komapi-passport#README.md",
   "engines": {
-    "node": ">= 6.9.4",
-    "npm": ">= 3.10.10"
+    "node": ">= 7.8.0",
+    "npm": ">= 4.2.0"
   },
   "main": "index.js",
   "module": "src/index.js",
@@ -55,7 +55,7 @@
     "eslint-plugin-import": "^2.0.1",
     "eslint-plugin-security": "^1.2.0",
     "koa": "^2.2.0",
-    "koa-bodyparser": "^3.1.0",
+    "koa-bodyparser": "^4.0.0",
     "koa-router": "^7.0.1",
     "nyc": "^10.0.0",
     "passport-anonymous": "^1.0.1",
