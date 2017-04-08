@@ -41,10 +41,8 @@ test('rejects unauthenticated requests', async (t) => {
   app.use(bodyParser());
   app.use(komapiPassport.initialize());
   app.use(komapiPassport.authenticate(['local', 'anonymous']));
+  app.use((ctx, next) => t.throws(next(), 'Access to this resource requires authentication'));
   app.use(ensureAuthenticated());
-  app.use((ctx, next) => {
-    t.throws(next, 'Access to this resource requires authentication');
-  });
   app.use((ctx) => {
     t.fail();
     ctx.body = 'ok'; // eslint-disable-line no-param-reassign
@@ -63,10 +61,8 @@ test('rejects unauthenticated requests with custom error message', async (t) => 
   app.use(bodyParser());
   app.use(komapiPassport.initialize());
   app.use(komapiPassport.authenticate(['local', 'anonymous']));
+  app.use((ctx, next) => t.throws(next(), msg));
   app.use(ensureAuthenticated(msg));
-  app.use((ctx, next) => {
-    t.throws(next, msg);
-  });
   app.use((ctx) => {
     t.fail();
     ctx.body = 'ok'; // eslint-disable-line no-param-reassign
