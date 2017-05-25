@@ -38,7 +38,7 @@
     "watch": "ava --watch --serial"
   },
   "dependencies": {
-    "boom": "^4.0.0",
+    "boom": "^5.0.0",
     "delegates": "^1.0.0",
     "passport": "^0.3.2"
   },
