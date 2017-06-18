@@ -19,8 +19,8 @@
   },
   "homepage": "https://github.com/komapijs/komapi-passport#README.md",
   "engines": {
-    "node": ">= 7.8.0",
-    "npm": ">= 4.2.0"
+    "node": ">= 8.0.0",
+    "npm": ">= 5.0.0"
   },
   "main": "index.js",
   "module": "src/index.js",
@@ -38,7 +38,7 @@
     "watch": "ava --watch --serial"
   },
   "dependencies": {
-    "boom": "^4.0.0",
+    "boom": "^5.1.0",
     "delegates": "^1.0.0",
     "passport": "^0.3.2"
   },
@@ -49,15 +49,15 @@
     "babel-eslint": "^7.1.0",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.11.5",
     "babel-register": "^6.18.0",
-    "del-cli": "^0.2.0",
-    "eslint": "^3.3.0",
+    "del-cli": "^1.0.0",
+    "eslint": "^4.0.0",
     "eslint-config-airbnb-base": "^11.0.1",
     "eslint-plugin-import": "^2.0.1",
     "eslint-plugin-security": "^1.2.0",
     "koa": "^2.2.0",
     "koa-bodyparser": "^4.0.0",
     "koa-router": "^7.0.1",
-    "nyc": "^10.0.0",
+    "nyc": "^11.0.2",
     "passport-anonymous": "^1.0.1",
     "passport-http": "^0.3.0",
     "passport-local": "^1.0.0",
