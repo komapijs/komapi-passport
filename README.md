@@ -8,7 +8,6 @@ Disclaimer: There will be breaking changes and outdated documentation during the
 [![npm](https://img.shields.io/npm/l/komapi-passport.svg)](https://github.com/komapijs/komapi-passport/blob/master/LICENSE.md)
 
 Recommended middleware for authentication in [komapi](https://github.com/komapijs/komapi). This is a [Koa](https://github.com/koajs/koa) compatible implementation of [Passport](https://github.com/jaredhanson/passport) and an alternative to [koa-passport](https://github.com/rkusa/koa-passport).
-Note that unlike [Passport](https://github.com/jaredhanson/passport), this middleware has `{ session: false }` as default.
 
 Please refer to [Passport](https://github.com/jaredhanson/passport) for more information on how to use passport.
 

@@ -18,7 +18,7 @@ test('allows authenticated requests', async (t) => {
   }));
   app.use(bodyParser());
   app.use(komapiPassport.initialize());
-  app.use(komapiPassport.authenticate('local'));
+  app.use(komapiPassport.authenticate('local', { session: false }));
   app.use(ensureAuthenticated());
   app.use((ctx) => {
     t.pass();
