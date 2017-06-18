@@ -7,7 +7,7 @@ import passportAuthenticate from 'passport/lib/middleware/authenticate';
 import ensureAuthenticated from './ensureAuthenticated';
 
 // Init
-const defaultOpts = { session: false };
+const defaultOpts = {};
 
 // Definitions
 class KomapiPassport extends passport.Passport {

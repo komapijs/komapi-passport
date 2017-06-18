@@ -127,10 +127,15 @@ test('refuses invalid credentials', async (t) => {
   t.is(context.user, undefined);
 });
 test('accepts valid credentials', async (t) => {
-  t.plan(5);
+  t.plan(6);
   const app = appFactory();
   const router = new Router();
   let context = {};
+  const originalSerializeFn = app.passport.serializeUser;
+  app.passport.serializeUser = function customTestSerializer(user, req, done) {
+    t.deepEqual(user, passportUser);
+    originalSerializeFn.call(this, user, req, done);
+  };
   router.get('/', (ctx) => {
     t.fail();
     ctx.body = null; // eslint-disable-line no-param-reassign
@@ -142,7 +147,6 @@ test('accepts valid credentials', async (t) => {
   app.use(app.passport.authenticate('local', {
     successRedirect: '/secured',
     failureRedirect: '/failed',
-    session: true,
   }));
   app.use(router.routes());
   const res = await request(app.listen())
@@ -434,7 +438,7 @@ test('supports custom user properties', async (t) => {
   app.use(komapiPassport.initialize({ userProperty: 'customProperty' }));
   app.use(komapiPassport.session());
   app.use(router.routes());
-  app.use(komapiPassport.authenticate('local'));
+  app.use(komapiPassport.authenticate('local', { session: false }));
   app.use((ctx) => {
     t.deepEqual(ctx.request.customProperty, passportUser);
     t.deepEqual(ctx.customProperty, passportUser);
