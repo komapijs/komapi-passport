@@ -15,11 +15,11 @@ const passportUser = {
   id: 1,
   username: 'test',
 };
-function appFactory() {
+function appFactory(serializeFn = (user, done) => done(null, user.id), deserializeFn = (id, done) => done(null, passportUser)) {
   const app = new Koa();
   const komapiPassport = new KomapiPassport();
-  komapiPassport.serializeUser((user, done) => done(null, user.id));
-  komapiPassport.deserializeUser((id, done) => done(null, passportUser));
+  komapiPassport.serializeUser(serializeFn);
+  komapiPassport.deserializeUser(deserializeFn);
   komapiPassport.use(new LocalStrategy((username, password, done) => {
     if (username === 'test' && password === 'testpw') return done(null, passportUser);
     else if (username === 'throw') return done(new Error('Authentication Error'));
@@ -124,18 +124,16 @@ test('refuses invalid credentials', async (t) => {
   t.is(res.headers.location, '/failed');
   t.is(context.isAuthenticated(), false);
   t.is(context.session, undefined);
-  t.is(context.user, undefined);
+  t.is(context.state.user, undefined);
 });
 test('accepts valid credentials', async (t) => {
   t.plan(6);
-  const app = appFactory();
+  const app = appFactory((user, done) => {
+    t.deepEqual(user, passportUser);
+    done(null, user.id);
+  });
   const router = new Router();
   let context = {};
-  const originalSerializeFn = app.passport.serializeUser;
-  app.passport.serializeUser = function customTestSerializer(user, req, done) {
-    t.deepEqual(user, passportUser);
-    originalSerializeFn.call(this, user, req, done);
-  };
   router.get('/', (ctx) => {
     t.fail();
     ctx.body = null; // eslint-disable-line no-param-reassign
@@ -160,7 +158,7 @@ test('accepts valid credentials', async (t) => {
       user: 1,
     },
   });
-  t.deepEqual(context.user, passportUser);
+  t.deepEqual(context.state.user, passportUser);
 });
 test('allows unauthenticated requests to unprotected routes', async (t) => {
   t.plan(4);
@@ -181,7 +179,7 @@ test('allows unauthenticated requests to unprotected routes', async (t) => {
     .get('/');
   t.is(res.status, 204);
   t.is(context.isAuthenticated(), false);
-  t.is(context.user, undefined);
+  t.is(context.state.user, undefined);
 });
 test('custom authentication callbacks accepts valid credentials', async (t) => {
   t.plan(5);
@@ -213,7 +211,7 @@ test('custom authentication callbacks accepts valid credentials', async (t) => {
     },
   });
   t.deepEqual(res.body, { success: true });
-  t.deepEqual(context.user, passportUser);
+  t.deepEqual(context.state.user, passportUser);
 });
 test('custom authentication callbacks refuses valid credentials', async (t) => {
   t.plan(5);
@@ -241,7 +239,7 @@ test('custom authentication callbacks refuses valid credentials', async (t) => {
   t.is(context.isAuthenticated(), false);
   t.deepEqual(context.session, undefined);
   t.deepEqual(res.body, { success: false });
-  t.deepEqual(context.user, undefined);
+  t.deepEqual(context.state.user, undefined);
 });
 test('login works', async (t) => {
   t.plan(5);
@@ -267,7 +265,7 @@ test('login works', async (t) => {
       user: 1,
     },
   });
-  t.deepEqual(context.user, passportUser);
+  t.deepEqual(context.state.user, passportUser);
 });
 test('logout works', async (t) => {
   t.plan(5);
@@ -293,7 +291,7 @@ test('logout works', async (t) => {
   t.is(res.status, 204);
   t.is(context.isAuthenticated(), false);
   t.deepEqual(context.session, { passport: {} });
-  t.deepEqual(context.user, null);
+  t.deepEqual(context.state.user, null);
 });
 test('errors in the login handler are correctly propagated', async (t) => {
   t.plan(3);
@@ -365,7 +363,7 @@ test('errors during authentication are propagated properly', async (t) => {
   t.is(res.status, 500);
   t.is(context.isAuthenticated(), false);
   t.deepEqual(res.body, { status: 'error' });
-  t.deepEqual(context.user, undefined);
+  t.deepEqual(context.state.user, undefined);
 });
 test('errors during custom authentication function are propagated properly', async (t) => {
   t.plan(5);
@@ -400,7 +398,7 @@ test('errors during custom authentication function are propagated properly', asy
   t.is(res.status, 500);
   t.is(context.isAuthenticated(), false);
   t.deepEqual(res.body, { status: 'error' });
-  t.deepEqual(context.user, undefined);
+  t.deepEqual(context.state.user, undefined);
 });
 test('can authorize using the account property', async (t) => {
   t.plan(2);
@@ -441,7 +439,7 @@ test('supports custom user properties', async (t) => {
   app.use(komapiPassport.authenticate('local', { session: false }));
   app.use((ctx) => {
     t.deepEqual(ctx.request.customProperty, passportUser);
-    t.deepEqual(ctx.customProperty, passportUser);
+    t.deepEqual(ctx.state.customProperty, passportUser);
     ctx.body = null; // eslint-disable-line no-param-reassign
   });
   const res = await request(app.listen())

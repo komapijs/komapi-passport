@@ -19,11 +19,13 @@ class KomapiPassport extends passport.Passport {
         return function initializeMiddleware(ctx, next) {
           if (!ctx.login) self.constructor.mutate(ctx, ctx.request, ctx.response);
           return new Promise((resolve, reject) => {
+            Object.defineProperty(ctx.request, passportInstance._userProperty, {
+              enumerable: true,
+              get: () => ctx.state[passportInstance._userProperty],
+              set: (v) => { ctx.state[passportInstance._userProperty] = v; },
+            });
             passportInitialize(passportInstance)(ctx.request, ctx.response, (err) => {
-              const login = ctx.request.login;
-              Object.defineProperty(ctx, ctx.request._passport.instance._userProperty, {
-                get: () => ctx.request[ctx.request._passport.instance._userProperty],
-              });
+              const login = ctx.request.login; // eslint-disable-line prefer-destructuring
               ctx.request.login = (user, opts, callback) => { // eslint-disable-line no-param-reassign
                 if (callback) return login.call(ctx.request, user, opts, callback);
                 return new Promise((loginResolve, loginReject) => {
