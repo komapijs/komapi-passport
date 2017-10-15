@@ -125,6 +125,12 @@ class KomapiPassport extends passport.Passport {
 }
 KomapiPassport._initialize = passport.initialize;
 KomapiPassport._authenticate = passport.authenticate;
+/**
+ * Mutate Koa application to improve performance during authentication
+ *
+ * @param {Koa} app - Koa application instance
+ * @returns {*} - Mutated context object
+ */
 function mutateApp(app) {
   return KomapiPassport.mutate(app.context, app.request, app.response);
 }

@@ -15,6 +15,13 @@ const passportUser = {
   id: 1,
   username: 'test',
 };
+/**
+ * Create an app for use in testing
+ *
+ * @param {function=} serializeFn - Optional function to serialize a user session in Passport.js
+ * @param {function=} deserializeFn - Optional function to deserialize a user session in Passport.js
+ * @returns {Koa} - Returns the application instance
+ */
 function appFactory(serializeFn = (user, done) => done(null, user.id), deserializeFn = (id, done) => done(null, passportUser)) {
   const app = new Koa();
   const komapiPassport = new KomapiPassport();
