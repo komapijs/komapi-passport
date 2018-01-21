@@ -1,5 +1,5 @@
 // Dependencies
-import { unauthorized as Unauthorized } from 'boom';
+import { unauthorized } from 'boom';
 
 // Exports
 /**
@@ -10,7 +10,7 @@ import { unauthorized as Unauthorized } from 'boom';
  */
 export default function ensureAuthenticatedProvider(message = 'Access to this resource requires authentication') {
   return function ensureAuthenticated(ctx, next) {
-    if (!ctx.isAuthenticated()) throw new Unauthorized(message);
+    if (!ctx.isAuthenticated()) throw unauthorized(message);
     return next();
   };
 }
