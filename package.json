@@ -24,6 +24,11 @@
   },
   "main": "dist/index",
   "types": "dist/index.d.ts",
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm test"
+    }
+  },
   "scripts": {
     "apply:format": "prettier --config .prettierrc --write \"{src,test,types}/**/*.{ts,js}?(x)\"",
     "prebuild": "npm run clean",
