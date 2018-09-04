@@ -1,3 +1,13 @@
+<a name="0.4.1"></a>
+## [0.4.1](https://github.com/komapijs/komapi-passport/compare/v0.4.0...v0.4.1) (2018-09-04)
+
+
+### Bug Fixes
+
+* add missing types ([84d711a](https://github.com/komapijs/komapi-passport/commit/84d711a))
+
+
+
 <a name="0.4.0"></a>
 # [0.4.0](https://github.com/komapijs/komapi-passport/compare/v0.3.0...v0.4.0) (2018-09-03)
 
