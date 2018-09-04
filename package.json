@@ -47,18 +47,17 @@
     "version": "npm run changelog && git add CHANGELOG.md"
   },
   "dependencies": {
+    "@types/boom": "^7.2.0",
+    "@types/koa": "^2.0.46",
+    "@types/passport": "^0.4.6",
     "boom": "^7.2.0",
     "delegates": "^1.0.0",
     "passport": "^0.4.0"
   },
   "devDependencies": {
-    "@types/boom": "^7.2.0",
-    "@types/cls-hooked": "^4.2.1",
     "@types/jest": "^23.0.0",
-    "@types/koa": "^2.0.46",
     "@types/koa-bodyparser": "^5.0.1",
     "@types/node": "^8.10.24",
-    "@types/passport": "^0.4.6",
     "@types/passport-anonymous": "^1.0.3",
     "@types/passport-http": "^0.3.6",
     "@types/passport-local": "^1.0.33",
