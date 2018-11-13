@@ -64,7 +64,7 @@
     "@types/passport-oauth2": "^1.4.5",
     "@types/supertest": "^2.0.4",
     "conventional-changelog-cli": "2.0.11",
-    "conventional-recommended-bump": "4.0.1",
+    "conventional-recommended-bump": "4.0.4",
     "del-cli": "^1.1.0",
     "husky": "1.0.0-rc.13",
     "jest": "^23.5.0",
