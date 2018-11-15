@@ -5,7 +5,7 @@ Disclaimer: There will be breaking changes and outdated documentation during the
 [![npm](https://img.shields.io/npm/v/komapi-passport.svg)](https://npmjs.org/package/komapi-passport)
 [![CircleCI](https://img.shields.io/circleci/project/github/komapijs/komapi-passport/master.svg)](https://circleci.com/gh/komapijs/komapi-passport/tree/master)
 [![Codecov branch](https://img.shields.io/codecov/c/github/komapijs/komapi-passport/master.svg)](https://codecov.io/gh/komapijs/komapi-passport/tree/master)
-[![David](https://img.shields.io/david/komapijs/komapi-passport/master.svg)](https://david-dm.org/ersims/varan/master)
+[![David](https://img.shields.io/david/komapijs/komapi-passport/master.svg)](https://david-dm.org/komapijs/komapi-passport/master)
 [![Known Vulnerabilities](https://snyk.io/test/github/komapijs/komapi-passport/master/badge.svg)](https://snyk.io/test/github/komapijs/komapi-passport/master)
 [![renovate-app badge](https://img.shields.io/badge/renovate-app-blue.svg)](https://renovateapp.com/)
 [![license](https://img.shields.io/github/license/komapijs/komapi-passport.svg)](https://github.com/komapijs/komapi-passport/blob/master/LICENSE.md)
