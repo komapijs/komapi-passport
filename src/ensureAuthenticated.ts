@@ -9,10 +9,10 @@ import { unauthorized } from 'boom';
  * @param {string} [message=Access to this resource requires authentication] - Optional error message to display
  * @returns {function} - Returns the middleware
  */
-export default function ensureAuthenticatedFactory(
+export default function ensureAuthenticatedMiddlewareFactory(
   message = 'Access to this resource requires authentication',
 ): Koa.Middleware {
-  return function ensureAuthenticated(ctx, next) {
+  return function ensureAuthenticatedMiddleware(ctx, next) {
     if (!ctx.isAuthenticated()) throw unauthorized(message);
     return next();
   };
