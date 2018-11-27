@@ -6,6 +6,7 @@ import { Strategy as LocalStrategy } from 'passport-local';
 import { Strategy as AnonymousStrategy } from 'passport-anonymous';
 import { BasicStrategy } from 'passport-http';
 import { Strategy as OAuth2Strategy } from 'passport-oauth2';
+import { Strategy as BearerStrategy } from 'passport-http-bearer';
 import passport, { KomapiPassport, mutateApp } from '../../src';
 
 /**
@@ -539,6 +540,38 @@ it('supports custom user property', async done => {
   const res = await request(app.listen())
     .post('/login')
     .send({ username: 'test', password: 'testpw' });
+  expect(res.status).toBe(204);
+
+  // Done
+  done();
+});
+it('supports authInfo', async done => {
+  expect.assertions(4);
+  const app = new Koa();
+  const komapiPassport = new KomapiPassport();
+  const authInfo = {
+    scope: ['read', 'write'],
+    provider: 'myprovider',
+  };
+  komapiPassport.use(
+    new BearerStrategy(async (token, doneCallback) => {
+      if (token === 'myCorrectToken') return doneCallback(null, passportUser, authInfo as any);
+      return doneCallback(null, false);
+    }),
+  );
+  app.use(bodyParser());
+  app.use(komapiPassport.initialize());
+  app.use(komapiPassport.session());
+  app.use(komapiPassport.authenticate('bearer', { session: false }));
+  app.use(ctx => {
+    expect((ctx.request as any).user).toEqual(passportUser);
+    expect(ctx.state.user).toEqual(passportUser);
+    expect(ctx.authInfo).toEqual(authInfo);
+    ctx.body = null;
+  });
+  const res = await request(app.listen())
+    .get('/')
+    .set('Authorization', 'Bearer myCorrectToken');
   expect(res.status).toBe(204);
 
   // Done

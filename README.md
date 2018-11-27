@@ -35,13 +35,13 @@ Username is "jeffj" and password is "mylittlesecret".
 
 ```js
 // Dependencies
-import Komapi from 'komapi';
+import Koa from 'koa';
 import passport, { mutateApp } from 'komapi-passport';
 import { BasicStrategy } from 'passport-http';
 import bcrypt from 'bcrypt';
 
 // Init
-const app = new Komapi();
+const app = new Koa();
 mutateApp(app); // This is optional. See the tips (1) for description
 const user = {
     id: 1,
@@ -64,10 +64,12 @@ passport.use(new BasicStrategy((username, password, done) => {
 // Middlewares
 app.use(passport.initialize());
 app.use(passport.authenticate(['basic']));
-app.use('/', passport.ensureAuthenticated(), (ctx) => ctx.send({
+app.use('/', passport.ensureAuthenticated(), (ctx) => {
+  ctx.body = {
     isAuthenticated: ctx.isAuthenticated(),
-    user: ctx.request.auth
-}));
+    user: ctx.state.user, // or 'ctx.auth' or 'ctx.request.auth' for consistency, regardless of passport user property
+  };
+});
 
 // Listen
 app.listen(process.env.PORT || 3000);

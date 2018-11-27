@@ -16,6 +16,7 @@ import passportAuthenticate from 'passport/lib/middleware/authenticate';
  */
 declare module 'koa' {
   export interface BaseRequest {
+    authInfo: object;
     _passport: {
       instance: passport.Authenticator<any, any, any>;
     };
@@ -70,9 +71,12 @@ class KomapiPassport extends passport.Passport {
     // Add passport to request
     Object.assign(request, passportRequest);
 
+    // Context to req
+    delegate<Koa.BaseContext, Koa.BaseRequest>(context, 'request').access('authInfo');
+
     // Context to request
     delegate<Koa.BaseContext, Koa.BaseRequest>(context, 'request')
-      .method('_passport')
+      .access('_passport')
       .method('login')
       .method('logIn')
       .method('logout')
@@ -81,12 +85,14 @@ class KomapiPassport extends passport.Passport {
       .method('isUnauthenticated');
 
     // Koa Request to native req
-    delegate<Koa.BaseRequest, http.IncomingMessage>(request, 'req')
+    delegate<Koa.BaseRequest, http.IncomingMessage & { authInfo: object }>(request, 'req')
+      .access('authInfo')
       .access('httpVersion')
       .access('trailers')
       .access('setTimeout')
       .access('statusCode')
-      .access('connection');
+      .access('connection')
+      .access('protocol');
 
     // Koa Request to context
     delegate<Koa.BaseRequest, Koa.Context>(request, 'ctx')
@@ -128,6 +134,8 @@ class KomapiPassport extends passport.Passport {
                 });
               };
               ctx.request.logIn = ctx.request.login;
+
+              /* istanbul ignore next line // ignored as passport does not generate an error in the callback today, but might in the future */
               if (err) return reject(err);
               return resolve();
             });
