@@ -50,7 +50,7 @@
   "dependencies": {
     "@types/boom": "^7.2.0",
     "@types/koa": "^2.0.46",
-    "@types/passport": "^0.4.6",
+    "@types/passport": "^1.0.0",
     "boom": "^7.2.0",
     "delegates": "^1.0.0",
     "passport": "^0.4.0"
