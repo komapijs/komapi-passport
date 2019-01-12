@@ -2,13 +2,14 @@
 
 Disclaimer: There will be breaking changes and outdated documentation during the pre-v1.0.0 cycles.
 
-[![npm](https://img.shields.io/npm/v/komapi-passport.svg)](https://npmjs.org/package/komapi-passport)
-[![CircleCI](https://img.shields.io/circleci/project/github/komapijs/komapi-passport/master.svg)](https://circleci.com/gh/komapijs/komapi-passport/tree/master)
-[![Codecov branch](https://img.shields.io/codecov/c/github/komapijs/komapi-passport/master.svg)](https://codecov.io/gh/komapijs/komapi-passport/tree/master)
-[![David](https://img.shields.io/david/komapijs/komapi-passport/master.svg)](https://david-dm.org/komapijs/komapi-passport/master)
-[![Known Vulnerabilities](https://snyk.io/test/github/komapijs/komapi-passport/master/badge.svg)](https://snyk.io/test/github/komapijs/komapi-passport/master)
-[![renovate-app badge](https://img.shields.io/badge/renovate-app-blue.svg)](https://renovateapp.com/)
-[![license](https://img.shields.io/github/license/komapijs/komapi-passport.svg)](https://github.com/komapijs/komapi-passport/blob/master/LICENSE.md)
+[![npm][npm-image]][npm-url]
+[![CircleCI][circleci-image]][circleci-url]
+[![Codecov branch][codecov-image]][codecov-url]
+[![David][david-image]][david-url]
+[![Known Vulnerabilities][snyk-image]][snyk-url]
+[![renovate-app badge][renovate-image]][renovate-url]
+[![Conventional Commits][conventional-commits-image]][conventional-commits-url]
+[![license][license-image]][license-url]
 
 Recommended middleware for authentication in [komapi](https://github.com/komapijs/komapi). This is a [Koa](https://github.com/koajs/koa) compatible implementation of [Passport](https://github.com/jaredhanson/passport) and an alternative to [koa-passport](https://github.com/rkusa/koa-passport).
 
@@ -92,3 +93,21 @@ Run `npm run release` to publish a new release and `npm run release --tag=next` 
 ## License
 
   [MIT](LICENSE.md)
+
+
+[npm-url]: https://npmjs.org/package/komapi-passport
+[npm-image]: https://img.shields.io/npm/v/komapi-passport.svg
+[circleci-url]: https://circleci.com/gh/komapijs/komapi-passport/tree/master
+[circleci-image]: https://img.shields.io/circleci/project/github/komapijs/komapi-passport/master.svg
+[codecov-url]: https://codecov.io/gh/komapijs/komapi-passport/tree/master
+[codecov-image]: https://img.shields.io/codecov/c/github/komapijs/komapi-passport/master.svg
+[david-url]: https://david-dm.org/komapijs/komapi-passport/master
+[david-image]: https://img.shields.io/david/komapijs/komapi-passport/master.svg
+[snyk-url]: https://snyk.io/test/github/komapijs/komapi-passport/master
+[snyk-image]: https://snyk.io/test/github/komapijs/komapi-passport/master/badge.svg
+[renovate-url]: https://renovateapp.com/
+[renovate-image]: https://img.shields.io/badge/renovate-app-blue.svg
+[conventional-commits-image]: https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg
+[conventional-commits-url]: https://conventionalcommits.org/
+[license-url]: https://github.com/komapijs/komapi-passport/blob/master/LICENSE.md
+[license-image]: https://img.shields.io/github/license/komapijs/komapi-passport.svg
