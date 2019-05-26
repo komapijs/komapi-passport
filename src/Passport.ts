@@ -1,4 +1,4 @@
-// Dependencies
+// eslint-disable-next-line import/no-extraneous-dependencies
 import Koa from 'koa';
 import delegate from 'delegates';
 import passport from 'passport';
@@ -11,14 +11,19 @@ import passportInitialize from 'passport/lib/middleware/initialize';
 // @ts-ignore
 import passportAuthenticate from 'passport/lib/middleware/authenticate';
 
+// Setup eslint
+/* eslint-disable no-underscore-dangle */
+
 /**
  * Overload Koa
  */
 declare module 'koa' {
   export interface BaseRequest {
+    account?: object;
+    user?: object;
     authInfo: object;
     _passport: {
-      instance: passport.Authenticator<any, any, any>;
+      instance: passport.Authenticator<unknown, unknown, unknown>;
     };
     login: (user: any, options?: any) => Promise<void>;
     logIn: this['login'];
@@ -106,7 +111,7 @@ class KomapiPassport extends passport.Passport {
   /**
    * Constructor
    */
-  constructor() {
+  public constructor() {
     super();
     this.framework({
       initialize: function initialize(
@@ -123,7 +128,7 @@ class KomapiPassport extends passport.Passport {
               },
             });
             passportInitialize(passportInstance)(ctx.request, ctx.response, (err: Error) => {
-              const login = ctx.request.login;
+              const { login } = ctx.request;
               ctx.request.login = (user: any, opts?: any, callback?: (err: Error) => void) => {
                 if (callback) return login.call(ctx.request, user, opts, callback);
                 return new Promise((loginResolve, loginReject) => {
