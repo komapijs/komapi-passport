@@ -70,7 +70,7 @@
     "@types/supertest": "^2.0.4",
     "conventional-changelog-cli": "2.0.21",
     "conventional-recommended-bump": "5.0.0",
-    "del-cli": "^1.1.0",
+    "del-cli": "^2.0.0",
     "husky": "^2.0.0",
     "jest": "^24.0.0",
     "koa": "^2.4.1",
