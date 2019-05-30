@@ -60,7 +60,7 @@
     "@commitlint/config-conventional": "^7.6.0",
     "@types/jest": "^24.0.13",
     "@types/koa-bodyparser": "^5.0.1",
-    "@types/node": "^12.0.2",
+    "@types/node": "^12.0.3",
     "@types/passport-anonymous": "^1.0.3",
     "@types/passport-http": "^0.3.8",
     "@types/passport-http-bearer": "^1.0.33",
@@ -71,7 +71,7 @@
     "@typescript-eslint/parser": "^1.9.0",
     "conventional-changelog-cli": "2.0.21",
     "conventional-recommended-bump": "5.0.0",
-    "del-cli": "^1.1.0",
+    "del-cli": "^2.0.0",
     "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-config-prettier": "^4.3.0",
@@ -91,7 +91,7 @@
     "prettier": "^1.17.1",
     "supertest": "^4.0.0",
     "ts-jest": "^24.0.0",
-    "typescript": "^3.4.5"
+    "typescript": "^3.5.1"
   },
   "files": [
     "src",
