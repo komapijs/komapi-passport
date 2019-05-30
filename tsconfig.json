@@ -21,16 +21,13 @@
     "noImplicitUseStrict": false,
     "strictFunctionTypes": true,
     "strictNullChecks": true,
+    "noFallthroughCasesInSwitch": true,
     "pretty": true,
     "sourceMap": true,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": false,
     "resolveJsonModule": true,
-    "outDir": "dist",
-    "rootDir": "src"
+    "outDir": "dist"
   },
-  "include": [
-    "types",
-    "src"
-  ]
+  "include": ["src/**/*", "types"]
 }

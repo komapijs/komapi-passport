@@ -23,14 +23,14 @@ it('rejects unauthenticated requests', async done => {
       await next();
     } catch (err) {
       ctx.body = err.message;
-      ctx.status = err.output.statusCode;
+      ctx.status = err.statusCode;
     }
   });
   app.use(bodyParser());
   app.use(komapiPassport.initialize());
   app.use(komapiPassport.authenticate(['local', 'anonymous']));
   app.use(ensureAuthenticated());
-  app.use(ctx => app.use(() => done.fail('should have cancelled the request')));
+  app.use(() => app.use(() => done.fail('should have cancelled the request')));
   const res = await request(app.listen())
     .post('/')
     .send({ username: 'test', password: 'asdf' });
@@ -56,7 +56,7 @@ it('rejects unauthenticated requests with custom error message', async done => {
       await next();
     } catch (err) {
       ctx.body = err.message;
-      ctx.status = err.output.statusCode;
+      ctx.status = err.statusCode;
     }
   });
   app.use(bodyParser());
