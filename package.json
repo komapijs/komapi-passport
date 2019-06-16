@@ -51,7 +51,7 @@
   "dependencies": {
     "@types/koa": "^2.0.46",
     "@types/passport": "^1.0.0",
-    "botched": "^0.2.1",
+    "botched": "^0.3.0",
     "delegates": "^1.0.0",
     "passport": "^0.4.0"
   },
@@ -74,7 +74,7 @@
     "del-cli": "^2.0.0",
     "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-config-prettier": "^4.3.0",
+    "eslint-config-prettier": "^5.0.0",
     "eslint-plugin-import": "^2.17.3",
     "eslint-plugin-jest": "^22.6.4",
     "husky": "^2.0.0",
