@@ -1,6 +1,6 @@
 {
   "name": "komapi-passport",
-  "version": "0.4.2",
+  "version": "0.5.0",
   "description": "komapi-passport is the recommended authentication module for Komapi and provides a higher performing alternative to koa-passport",
   "author": "ersims",
   "repository": {
