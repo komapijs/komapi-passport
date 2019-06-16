@@ -51,7 +51,7 @@
   "dependencies": {
     "@types/koa": "^2.0.46",
     "@types/passport": "^1.0.0",
-    "botched": "^0.3.0",
+    "botched": "^0.4.0",
     "delegates": "^1.0.0",
     "passport": "^0.4.0"
   },
