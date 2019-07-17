@@ -1,3 +1,11 @@
+<a name="0.5.1"></a>
+
+## [0.5.1](https://github.com/komapijs/komapi-passport/compare/v0.5.0...v0.5.1) (2019-07-17)
+
+### Bug Fixes
+
+- **deps:** update dependency botched to ^0.4.0 ([1714227](https://github.com/komapijs/komapi-passport/commit/1714227))
+
 <a name="0.5.0"></a>
 
 # [0.5.0](https://github.com/komapijs/komapi-passport/compare/v0.4.2...v0.5.0) (2019-06-16)
