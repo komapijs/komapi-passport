@@ -4,12 +4,11 @@ import delegate from 'delegates';
 import passport from 'passport';
 import http from 'http';
 
-// @ts-ignore
-import passportRequest from 'passport/lib/http/request';
-// @ts-ignore
-import passportInitialize from 'passport/lib/middleware/initialize';
-// @ts-ignore
-import passportAuthenticate from 'passport/lib/middleware/authenticate';
+/* eslint-disable @typescript-eslint/no-var-requires */
+const passportRequest = require('passport/lib/http/request');
+const passportInitialize = require('passport/lib/middleware/initialize');
+const passportAuthenticate = require('passport/lib/middleware/authenticate');
+/* eslint-enable @typescript-eslint/no-var-requires */
 
 // Setup eslint
 /* eslint-disable no-underscore-dangle */
@@ -157,10 +156,10 @@ class KomapiPassport extends passport.Passport {
         let cb: (...args: any[]) => any;
         if (typeof options === 'function') {
           cb = options;
-          config = Object.assign({});
+          config = {};
         } else {
           cb = callback;
-          config = Object.assign({}, options);
+          config = { ...options };
         }
         return function authenticateMiddleware(ctx, next) {
           return new Promise((resolve, reject) => {
