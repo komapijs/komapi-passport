@@ -31,7 +31,7 @@ it('rejects unauthenticated requests', async done => {
   app.use(komapiPassport.authenticate(['local', 'anonymous']));
   app.use(ensureAuthenticated());
   app.use(() => app.use(() => done.fail('should have cancelled the request')));
-  const res = await request(app.listen())
+  const res = await request(app.callback())
     .post('/')
     .send({ username: 'test', password: 'asdf' });
   expect(res.status).toBe(401);
@@ -64,7 +64,7 @@ it('rejects unauthenticated requests with custom error message', async done => {
   app.use(komapiPassport.authenticate(['local', 'anonymous']));
   app.use(ensureAuthenticated('My custom error message'));
   app.use(() => done.fail('should have cancelled the request'));
-  const res = await request(app.listen())
+  const res = await request(app.callback())
     .post('/')
     .send({ username: 'test', password: 'asdf' });
   expect(res.status).toBe(401);
@@ -90,7 +90,7 @@ it('allows authenticated requests', async done => {
   app.use(ctx => {
     ctx.body = 'ok';
   });
-  const res = await request(app.listen())
+  const res = await request(app.callback())
     .post('/')
     .send({ username: 'test', password: 'testpw' });
   expect(res.status).toBe(200);

@@ -89,7 +89,7 @@ it('does not mutate a globally mutated Koa instance', async done => {
     expect(ctx.isAuthenticated()).toBe(false);
     ctx.body = null;
   });
-  const res = await request(app.listen()).get('/');
+  const res = await request(app.callback()).get('/');
   expect(res.status).toBe(204);
   expect(spy).not.toHaveBeenCalled();
 
@@ -115,7 +115,7 @@ it('mutates context automatically if Koa is not globally mutated', async done =>
     expect(ctx.isAuthenticated()).toBe(false);
     ctx.body = null;
   });
-  const res = await request(app.listen()).get('/');
+  const res = await request(app.callback()).get('/');
   expect(res.status).toBe(204);
 
   // Done
@@ -128,7 +128,7 @@ it('adds www-authenticate header for basic authentication', async done => {
   app.passport.use(new AnonymousStrategy());
   app.use(app.passport.authenticate('basic'));
   app.use(() => done.fail('should have cancelled the request'));
-  const res = await request(app.listen()).get('/');
+  const res = await request(app.callback()).get('/');
   expect(res.status).toBe(401);
   expect(res.header['www-authenticate']).toBe('Basic realm="Users"');
 
@@ -156,7 +156,7 @@ it('provides a passport singleton by default', async done => {
       session: false,
     }),
   );
-  const res = await request(app.listen())
+  const res = await request(app.callback())
     .post('/login')
     .send({ username: 'test', password: 'testpw' });
   expect(res.status).toBe(302);
@@ -184,7 +184,7 @@ it('refuses invalid credentials', async done => {
   );
   app.use(() => done.fail('should have cancelled the request'));
 
-  const res = await request(app.listen())
+  const res = await request(app.callback())
     .post('/login')
     .send({ username: 'test', password: 'asdf' });
   expect(res.status).toBe(302);
@@ -221,7 +221,7 @@ it('accepts valid credentials', async done => {
   );
   app.use(() => done.fail('should have cancelled the request'));
 
-  const res = await request(app.listen())
+  const res = await request(app.callback())
     .post('/login')
     .send({ username: 'test', password: 'testpw' });
   expect(res.status).toBe(302);
@@ -245,7 +245,7 @@ it('allows unauthenticated requests to unprotected routes', async done => {
     ctx.body = null;
   });
 
-  const res = await request(app.listen())
+  const res = await request(app.callback())
     .post('/')
     .send({ username: 'test', password: 'testpw' });
   expect(res.status).toBe(204);
@@ -273,7 +273,7 @@ it('custom authentication callbacks refuses invalid credentials', async done => 
       }
     })(ctx, next),
   );
-  const res = await request(app.listen())
+  const res = await request(app.callback())
     .post('/login')
     .send({ username: 'test', password: 'asdf' });
   expect(res.status).toBe(401);
@@ -306,7 +306,7 @@ it('custom authentication callbacks accepts valid credentials', async done => {
       }
     })(ctx, next),
   );
-  const res = await request(app.listen())
+  const res = await request(app.callback())
     .post('/login')
     .send({ username: 'test', password: 'testpw' });
   expect(res.status).toBe(200);
@@ -332,7 +332,7 @@ it('login() works', async done => {
   app.use(ctx => {
     ctx.body = null;
   });
-  const res = await request(app.listen()).get('/');
+  const res = await request(app.callback()).get('/');
   expect(res.status).toBe(204);
 
   // Done
@@ -355,7 +355,7 @@ it('logout() works', async done => {
   app.use(ctx => {
     ctx.body = null;
   });
-  const res = await request(app.listen()).get('/');
+  const res = await request(app.callback()).get('/');
   expect(res.status).toBe(204);
 
   // Done
@@ -394,7 +394,7 @@ it('errors in the login handler are correctly handled', async done => {
     done.fail('Should have cancelled the request');
     return next();
   });
-  const res = await request(app.listen())
+  const res = await request(app.callback())
     .post('/login')
     .send({ username: 'test', password: 'testpw' });
   expect(res.status).toBe(500);
@@ -428,7 +428,7 @@ it('errors during authentication are correctly handled', async done => {
     done.fail('Should have cancelled the request');
     return next();
   });
-  const res = await request(app.listen())
+  const res = await request(app.callback())
     .post('/login')
     .send({ username: 'throw', password: 'throw' });
   expect(res.status).toBe(500);
@@ -462,7 +462,7 @@ it('errors during custom authentication are correctly handled', async done => {
     done.fail('Should have cancelled the request');
     return next();
   });
-  const res = await request(app.listen())
+  const res = await request(app.callback())
     .post('/login')
     .send({ username: 'throw', password: 'throw' });
   expect(res.status).toBe(500);
@@ -487,7 +487,7 @@ it('can authorize using the default account property', async done => {
   app.use(ctx => {
     ctx.body = null;
   });
-  const res = await request(app.listen())
+  const res = await request(app.callback())
     .post('/login')
     .send({ username: 'test', password: 'testpw' });
   expect(res.status).toBe(204);
@@ -518,7 +518,7 @@ it('supports custom user property', async done => {
     expect(ctx.state.customProperty).toEqual(passportUser);
     ctx.body = null;
   });
-  const res = await request(app.listen())
+  const res = await request(app.callback())
     .post('/login')
     .send({ username: 'test', password: 'testpw' });
   expect(res.status).toBe(204);
@@ -551,7 +551,7 @@ it('supports authInfo', async done => {
     expect(ctx.authInfo).toEqual(authInfo);
     ctx.body = null;
   });
-  const res = await request(app.listen())
+  const res = await request(app.callback())
     .get('/')
     .set('Authorization', 'Bearer myCorrectToken');
   expect(res.status).toBe(204);
@@ -578,7 +578,7 @@ it('does not set body unless explicitly told to', async done => {
   );
   app.use(komapiPassport.initialize());
   app.use(komapiPassport.authenticate('oauth2'));
-  const res = await request(app.listen())
+  const res = await request(app.callback())
     .get('/login')
     .send({ username: 'test', password: 'testpw' });
   expect(res.status).toBe(302);
