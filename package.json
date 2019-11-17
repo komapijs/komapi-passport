@@ -73,7 +73,7 @@
     "@types/supertest": "^2.0.4",
     "@typescript-eslint/eslint-plugin": "^2.0.0",
     "@typescript-eslint/parser": "^2.0.0",
-    "conventional-changelog-cli": "2.0.27",
+    "conventional-changelog-cli": "2.0.28",
     "conventional-recommended-bump": "^6.0.0",
     "del-cli": "^3.0.0",
     "eslint": "^6.2.1",
