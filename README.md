@@ -73,7 +73,7 @@ passport.use(
 // Middlewares
 app.use(passport.initialize());
 app.use(passport.authenticate(['basic']));
-app.use('/', passport.ensureAuthenticated(), ctx => {
+app.use('/', passport.ensureAuthenticated(), (ctx) => {
   ctx.body = {
     isAuthenticated: ctx.isAuthenticated(),
     user: ctx.state.user, // or 'ctx.auth' or 'ctx.request.auth' for consistency, regardless of passport user property

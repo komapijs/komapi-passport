@@ -99,10 +99,7 @@ class KomapiPassport extends passport.Passport {
       .access('protocol');
 
     // Koa Request to context
-    delegate<Koa.BaseRequest, Koa.Context>(request, 'ctx')
-      .access('cookies')
-      .access('throw')
-      .access('session');
+    delegate<Koa.BaseRequest, Koa.Context>(request, 'ctx').access('cookies').access('throw').access('session');
 
     return context;
   }
@@ -122,7 +119,7 @@ class KomapiPassport extends passport.Passport {
             Object.defineProperty(ctx.request, passportInstance._userProperty, {
               enumerable: true,
               get: () => ctx.state[passportInstance._userProperty],
-              set: v => {
+              set: (v) => {
                 ctx.state[passportInstance._userProperty] = v;
               },
             });
@@ -184,20 +181,19 @@ class KomapiPassport extends passport.Passport {
               const _callback = cb;
               cb = function authenticateCallback(err, user, info, status) {
                 if (err) return reject(err);
-                return Promise.resolve(_callback(user, info, status))
-                  .then(resolve)
-                  .catch(reject);
+                return Promise.resolve(_callback(user, info, status)).then(resolve).catch(reject);
               };
             }
-            return passportAuthenticate(passportInstance, strategies, config, cb)(
-              ctx.request,
-              mockRes,
-              (err: Error) => {
-                if (err) return reject(err);
-                return resolve();
-              },
-            );
-          }).then(stop => {
+            return passportAuthenticate(
+              passportInstance,
+              strategies,
+              config,
+              cb,
+            )(ctx.request, mockRes, (err: Error) => {
+              if (err) return reject(err);
+              return resolve();
+            });
+          }).then((stop) => {
             if (!stop) return next();
             return null;
           });

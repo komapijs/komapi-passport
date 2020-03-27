@@ -7,7 +7,7 @@ import { Strategy as LocalStrategy } from 'passport-local';
 import { ensureAuthenticated, KomapiPassport } from '../../src';
 
 // Tests
-it('rejects unauthenticated requests', async done => {
+it('rejects unauthenticated requests', async (done) => {
   expect.assertions(2);
   const app = new Koa();
   const komapiPassport = new KomapiPassport();
@@ -31,16 +31,14 @@ it('rejects unauthenticated requests', async done => {
   app.use(komapiPassport.authenticate(['local', 'anonymous']));
   app.use(ensureAuthenticated());
   app.use(() => app.use(() => done.fail('should have cancelled the request')));
-  const res = await request(app.callback())
-    .post('/')
-    .send({ username: 'test', password: 'asdf' });
+  const res = await request(app.callback()).post('/').send({ username: 'test', password: 'asdf' });
   expect(res.status).toBe(401);
   expect(res.text).toBe('Access to this resource requires authentication');
 
   // Done
   done();
 });
-it('rejects unauthenticated requests with custom error message', async done => {
+it('rejects unauthenticated requests with custom error message', async (done) => {
   expect.assertions(2);
   const app = new Koa();
   const komapiPassport = new KomapiPassport();
@@ -64,16 +62,14 @@ it('rejects unauthenticated requests with custom error message', async done => {
   app.use(komapiPassport.authenticate(['local', 'anonymous']));
   app.use(ensureAuthenticated('My custom error message'));
   app.use(() => done.fail('should have cancelled the request'));
-  const res = await request(app.callback())
-    .post('/')
-    .send({ username: 'test', password: 'asdf' });
+  const res = await request(app.callback()).post('/').send({ username: 'test', password: 'asdf' });
   expect(res.status).toBe(401);
   expect(res.text).toBe('My custom error message');
 
   // Done
   done();
 });
-it('allows authenticated requests', async done => {
+it('allows authenticated requests', async (done) => {
   expect.assertions(2);
   const app = new Koa();
   const komapiPassport = new KomapiPassport();
@@ -87,12 +83,10 @@ it('allows authenticated requests', async done => {
   app.use(komapiPassport.initialize());
   app.use(komapiPassport.authenticate('local', { session: false }));
   app.use(ensureAuthenticated());
-  app.use(ctx => {
+  app.use((ctx) => {
     ctx.body = 'ok';
   });
-  const res = await request(app.callback())
-    .post('/')
-    .send({ username: 'test', password: 'testpw' });
+  const res = await request(app.callback()).post('/').send({ username: 'test', password: 'testpw' });
   expect(res.status).toBe(200);
   expect(res.text).toBe('ok');
 

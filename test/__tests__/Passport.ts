@@ -70,12 +70,12 @@ it('can mutate Koa globally to improve performance', () => {
   // There should be login handlers after mutation
   expect(app.context.login).not.toBe(undefined);
 });
-it('does not mutate a globally mutated Koa instance', async done => {
+it('does not mutate a globally mutated Koa instance', async (done) => {
   expect.assertions(3);
   const app = appFactory();
   const orgMutator = (app.passport.constructor as typeof KomapiPassport).mutate;
   mutateApp(app);
-  const spy = jest.fn(context => context);
+  const spy = jest.fn((context) => context);
   KomapiPassport.mutate = spy;
 
   app.passport.use(new AnonymousStrategy());
@@ -85,7 +85,7 @@ it('does not mutate a globally mutated Koa instance', async done => {
       failureRedirect: '/failed',
     }),
   );
-  app.use(ctx => {
+  app.use((ctx) => {
     expect(ctx.isAuthenticated()).toBe(false);
     ctx.body = null;
   });
@@ -99,7 +99,7 @@ it('does not mutate a globally mutated Koa instance', async done => {
   // Done
   done();
 });
-it('mutates context automatically if Koa is not globally mutated', async done => {
+it('mutates context automatically if Koa is not globally mutated', async (done) => {
   expect.assertions(3);
   const app = appFactory();
 
@@ -110,7 +110,7 @@ it('mutates context automatically if Koa is not globally mutated', async done =>
       failureRedirect: '/failed',
     }),
   );
-  app.use(ctx => {
+  app.use((ctx) => {
     expect(typeof ctx.isAuthenticated).toBe('function');
     expect(ctx.isAuthenticated()).toBe(false);
     ctx.body = null;
@@ -121,7 +121,7 @@ it('mutates context automatically if Koa is not globally mutated', async done =>
   // Done
   done();
 });
-it('adds www-authenticate header for basic authentication', async done => {
+it('adds www-authenticate header for basic authentication', async (done) => {
   expect.assertions(2);
   const app = appFactory();
 
@@ -135,7 +135,7 @@ it('adds www-authenticate header for basic authentication', async done => {
   // Done
   done();
 });
-it('provides a passport singleton by default', async done => {
+it('provides a passport singleton by default', async (done) => {
   expect.assertions(2);
   const app = new Koa();
   mutateApp(app);
@@ -156,16 +156,14 @@ it('provides a passport singleton by default', async done => {
       session: false,
     }),
   );
-  const res = await request(app.callback())
-    .post('/login')
-    .send({ username: 'test', password: 'testpw' });
+  const res = await request(app.callback()).post('/login').send({ username: 'test', password: 'testpw' });
   expect(res.status).toBe(302);
   expect(res.header.location).toBe('/secured');
 
   // Done
   done();
 });
-it('refuses invalid credentials', async done => {
+it('refuses invalid credentials', async (done) => {
   expect.assertions(5);
   const app = appFactory();
 
@@ -184,16 +182,14 @@ it('refuses invalid credentials', async done => {
   );
   app.use(() => done.fail('should have cancelled the request'));
 
-  const res = await request(app.callback())
-    .post('/login')
-    .send({ username: 'test', password: 'asdf' });
+  const res = await request(app.callback()).post('/login').send({ username: 'test', password: 'asdf' });
   expect(res.status).toBe(302);
   expect(res.header.location).toBe('/failed');
 
   // Done
   done();
 });
-it('accepts valid credentials', async done => {
+it('accepts valid credentials', async (done) => {
   expect.assertions(9);
   const app = appFactory((user, doneCallback) => {
     expect(user).toEqual(passportUser);
@@ -221,16 +217,14 @@ it('accepts valid credentials', async done => {
   );
   app.use(() => done.fail('should have cancelled the request'));
 
-  const res = await request(app.callback())
-    .post('/login')
-    .send({ username: 'test', password: 'testpw' });
+  const res = await request(app.callback()).post('/login').send({ username: 'test', password: 'testpw' });
   expect(res.status).toBe(302);
   expect(res.header.location).toBe('/secured');
 
   // Done
   done();
 });
-it('allows unauthenticated requests to unprotected routes', async done => {
+it('allows unauthenticated requests to unprotected routes', async (done) => {
   expect.assertions(4);
   const app = appFactory((user, doneCallback) => {
     expect(user).toEqual(passportUser);
@@ -238,22 +232,20 @@ it('allows unauthenticated requests to unprotected routes', async done => {
   });
 
   app.passport.use(new AnonymousStrategy());
-  app.use(ctx => {
+  app.use((ctx) => {
     expect(ctx.isAuthenticated()).toBe(false);
     expect(ctx.session).toBe(undefined);
     expect(ctx.state.user).toBe(undefined);
     ctx.body = null;
   });
 
-  const res = await request(app.callback())
-    .post('/')
-    .send({ username: 'test', password: 'testpw' });
+  const res = await request(app.callback()).post('/').send({ username: 'test', password: 'testpw' });
   expect(res.status).toBe(204);
 
   // Done
   done();
 });
-it('custom authentication callbacks refuses invalid credentials', async done => {
+it('custom authentication callbacks refuses invalid credentials', async (done) => {
   expect.assertions(5);
   const app = appFactory();
   app.use(async (ctx, next) => {
@@ -263,7 +255,7 @@ it('custom authentication callbacks refuses invalid credentials', async done => 
     expect(ctx.state.user).toBe(undefined);
   });
   app.use((ctx, next) =>
-    app.passport.authenticate('local', user => {
+    app.passport.authenticate('local', (user) => {
       if (!user) {
         ctx.status = 401;
         ctx.body = { success: false };
@@ -273,16 +265,14 @@ it('custom authentication callbacks refuses invalid credentials', async done => 
       }
     })(ctx, next),
   );
-  const res = await request(app.callback())
-    .post('/login')
-    .send({ username: 'test', password: 'asdf' });
+  const res = await request(app.callback()).post('/login').send({ username: 'test', password: 'asdf' });
   expect(res.status).toBe(401);
   expect(res.body).toEqual({ success: false });
 
   // Done
   done();
 });
-it('custom authentication callbacks accepts valid credentials', async done => {
+it('custom authentication callbacks accepts valid credentials', async (done) => {
   expect.assertions(5);
   const app = appFactory();
   app.use(async (ctx, next) => {
@@ -296,7 +286,7 @@ it('custom authentication callbacks accepts valid credentials', async done => {
     });
   });
   app.use((ctx, next) =>
-    app.passport.authenticate('local', user => {
+    app.passport.authenticate('local', (user) => {
       if (!user) {
         ctx.status = 401;
         ctx.body = { success: false };
@@ -306,16 +296,14 @@ it('custom authentication callbacks accepts valid credentials', async done => {
       }
     })(ctx, next),
   );
-  const res = await request(app.callback())
-    .post('/login')
-    .send({ username: 'test', password: 'testpw' });
+  const res = await request(app.callback()).post('/login').send({ username: 'test', password: 'testpw' });
   expect(res.status).toBe(200);
   expect(res.body).toEqual({ success: true });
 
   // Done
   done();
 });
-it('login() works', async done => {
+it('login() works', async (done) => {
   expect.assertions(4);
   const app = appFactory();
   app.use(async (ctx, next) => {
@@ -329,7 +317,7 @@ it('login() works', async done => {
       },
     });
   });
-  app.use(ctx => {
+  app.use((ctx) => {
     ctx.body = null;
   });
   const res = await request(app.callback()).get('/');
@@ -338,7 +326,7 @@ it('login() works', async done => {
   // Done
   done();
 });
-it('logout() works', async done => {
+it('logout() works', async (done) => {
   expect.assertions(4);
   const app = appFactory();
   app.use(async (ctx, next) => {
@@ -352,7 +340,7 @@ it('logout() works', async done => {
     ctx.logout();
     return next();
   });
-  app.use(ctx => {
+  app.use((ctx) => {
     ctx.body = null;
   });
   const res = await request(app.callback()).get('/');
@@ -361,7 +349,7 @@ it('logout() works', async done => {
   // Done
   done();
 });
-it('errors in the login handler are correctly handled', async done => {
+it('errors in the login handler are correctly handled', async (done) => {
   expect.assertions(3);
   const app = new Koa();
   const localPassport = new KomapiPassport();
@@ -385,7 +373,7 @@ it('errors in the login handler are correctly handled', async done => {
     }
   });
   app.use((ctx, next) =>
-    localPassport.authenticate('local', user => {
+    localPassport.authenticate('local', (user) => {
       if (!user) throw new Error('Invalid user');
       return ctx.login(user);
     })(ctx, next),
@@ -394,16 +382,14 @@ it('errors in the login handler are correctly handled', async done => {
     done.fail('Should have cancelled the request');
     return next();
   });
-  const res = await request(app.callback())
-    .post('/login')
-    .send({ username: 'test', password: 'testpw' });
+  const res = await request(app.callback()).post('/login').send({ username: 'test', password: 'testpw' });
   expect(res.status).toBe(500);
   expect(res.body).toEqual({ error: 'Failed to serialize user into session' });
 
   // Done
   done();
 });
-it('errors during authentication are correctly handled', async done => {
+it('errors during authentication are correctly handled', async (done) => {
   expect.assertions(5);
   const app = appFactory();
   app.use(async (ctx, next) => {
@@ -428,16 +414,14 @@ it('errors during authentication are correctly handled', async done => {
     done.fail('Should have cancelled the request');
     return next();
   });
-  const res = await request(app.callback())
-    .post('/login')
-    .send({ username: 'throw', password: 'throw' });
+  const res = await request(app.callback()).post('/login').send({ username: 'throw', password: 'throw' });
   expect(res.status).toBe(500);
   expect(res.body).toEqual({ status: 'error' });
 
   // Done
   done();
 });
-it('errors during custom authentication are correctly handled', async done => {
+it('errors during custom authentication are correctly handled', async (done) => {
   expect.assertions(5);
   const app = appFactory();
   app.use(async (ctx, next) => {
@@ -453,7 +437,7 @@ it('errors during custom authentication are correctly handled', async done => {
     }
   });
   app.use((ctx, next) =>
-    app.passport.authenticate('local', user => {
+    app.passport.authenticate('local', (user) => {
       if (!user) throw new Error('Authentication Error');
       return ctx.login(user, { session: false });
     })(ctx, next),
@@ -462,16 +446,14 @@ it('errors during custom authentication are correctly handled', async done => {
     done.fail('Should have cancelled the request');
     return next();
   });
-  const res = await request(app.callback())
-    .post('/login')
-    .send({ username: 'throw', password: 'throw' });
+  const res = await request(app.callback()).post('/login').send({ username: 'throw', password: 'throw' });
   expect(res.status).toBe(500);
   expect(res.body).toEqual({ status: 'error' });
 
   // Done
   done();
 });
-it('can authorize using the default account property', async done => {
+it('can authorize using the default account property', async (done) => {
   expect.assertions(2);
   const app = appFactory();
   app.use(async (ctx, next) => {
@@ -484,18 +466,16 @@ it('can authorize using the default account property', async done => {
       failureRedirect: '/failed',
     }),
   );
-  app.use(ctx => {
+  app.use((ctx) => {
     ctx.body = null;
   });
-  const res = await request(app.callback())
-    .post('/login')
-    .send({ username: 'test', password: 'testpw' });
+  const res = await request(app.callback()).post('/login').send({ username: 'test', password: 'testpw' });
   expect(res.status).toBe(204);
 
   // Done
   done();
 });
-it('supports custom user property', async done => {
+it('supports custom user property', async (done) => {
   expect.assertions(3);
 
   // Type
@@ -513,20 +493,18 @@ it('supports custom user property', async done => {
   app.use(komapiPassport.initialize({ userProperty: 'customProperty' }));
   app.use(komapiPassport.session());
   app.use(komapiPassport.authenticate('local', { session: false }));
-  app.use(ctx => {
+  app.use((ctx) => {
     expect((ctx.request as RequestWithCustomProperty).customProperty).toEqual(passportUser);
     expect(ctx.state.customProperty).toEqual(passportUser);
     ctx.body = null;
   });
-  const res = await request(app.callback())
-    .post('/login')
-    .send({ username: 'test', password: 'testpw' });
+  const res = await request(app.callback()).post('/login').send({ username: 'test', password: 'testpw' });
   expect(res.status).toBe(204);
 
   // Done
   done();
 });
-it('supports authInfo', async done => {
+it('supports authInfo', async (done) => {
   expect.assertions(4);
   const app = new Koa();
   const komapiPassport = new KomapiPassport();
@@ -545,21 +523,19 @@ it('supports authInfo', async done => {
   app.use(komapiPassport.initialize());
   app.use(komapiPassport.session());
   app.use(komapiPassport.authenticate('bearer', { session: false }));
-  app.use(ctx => {
+  app.use((ctx) => {
     expect(ctx.request.user).toEqual(passportUser);
     expect(ctx.state.user).toEqual(passportUser);
     expect(ctx.authInfo).toEqual(authInfo);
     ctx.body = null;
   });
-  const res = await request(app.callback())
-    .get('/')
-    .set('Authorization', 'Bearer myCorrectToken');
+  const res = await request(app.callback()).get('/').set('Authorization', 'Bearer myCorrectToken');
   expect(res.status).toBe(204);
 
   // Done
   done();
 });
-it('does not set body unless explicitly told to', async done => {
+it('does not set body unless explicitly told to', async (done) => {
   expect.assertions(3);
   const app = new Koa();
   const komapiPassport = new KomapiPassport();
@@ -573,14 +549,14 @@ it('does not set body unless explicitly told to', async done => {
         passReqToCallback: false,
         callbackURL: '',
       },
-      () => {},
+      () => {
+        // Empty
+      },
     ),
   );
   app.use(komapiPassport.initialize());
   app.use(komapiPassport.authenticate('oauth2'));
-  const res = await request(app.callback())
-    .get('/login')
-    .send({ username: 'test', password: 'testpw' });
+  const res = await request(app.callback()).get('/login').send({ username: 'test', password: 'testpw' });
   expect(res.status).toBe(302);
   expect(res.body).toEqual({});
   expect(res.header.location).toBe('https://www.example.com/oauth2/authorize?response_type=code&client_id=ABC123');
