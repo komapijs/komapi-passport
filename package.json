@@ -60,7 +60,7 @@
     "passport": "^0.4.1"
   },
   "devDependencies": {
-    "@commitlint/cli": "^8.0.0",
+    "@commitlint/cli": "^9.0.0",
     "@commitlint/config-conventional": "^8.0.0",
     "@types/jest": "^25.1.4",
     "@types/koa-bodyparser": "^5.0.1",
@@ -73,7 +73,7 @@
     "@types/supertest": "^2.0.4",
     "@typescript-eslint/eslint-plugin": "^2.0.0",
     "@typescript-eslint/parser": "^2.0.0",
-    "conventional-changelog-cli": "2.0.31",
+    "conventional-changelog-cli": "2.0.33",
     "conventional-recommended-bump": "^6.0.0",
     "del-cli": "^3.0.0",
     "eslint": "^6.2.1",
